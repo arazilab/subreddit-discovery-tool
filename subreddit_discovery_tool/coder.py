@@ -3,6 +3,7 @@ Perform relevancy coding using BooleanConsensusAgent from OpenAI utils.
 """
 from typing import Dict, Any
 from bot_utils.boolean_consensus_agent import BooleanConsensusAgent
+from tqdm import tqdm
 
 
 def run_relevancy_coding(
@@ -20,7 +21,7 @@ def run_relevancy_coding(
     :param kwargs: Parameters for BooleanConsensusAgent.
     :return: Updated subs dict with 'relevant' field.
     """
-    for name, data in subs.items():
+    for name, data in tqdm(subs.items(), desc="Relevance classification"):
         # Build the prompt text
         title = data.get("display_name", name)
         desc = data.get("description", "")
