@@ -16,7 +16,8 @@ def collect_subreddits(keywords: List[str], top_n: int) -> Dict[str, Dict]:
     """
     client = ArcticShiftClient()
     subs: Dict[str, Dict] = {}
-    for kw in tqdm(keywords, desc="Searching keywords"):
+    kws = set(kw_part for kw in keywords for kw_part in kw.split())
+    for kw in tqdm(list(kws), desc="Searching keywords"):
         results = client.search_subreddits(kw, top_n)
         if not results:
             print(f"[!] No subreddits found or API failed for: {kw}")
