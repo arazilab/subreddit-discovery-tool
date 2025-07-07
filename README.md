@@ -1,6 +1,6 @@
 # 🧭 Subreddit Discovery Tool
 
-A modular Python tool to search, collect, and label relevant subreddits using keywords. It connects to the **Arctic Shift Reddit API** and uses **OpenAI’s BooleanConsensusAgent** to automatically tag subreddits as relevant or not based on a yes/no criterion.
+A modular Python tool to search, collect, and label relevant subreddits using keywords. It connects to the **Arctic Shift Reddit API** and uses **Our lab's BooleanConsensusAgent** to automatically tag subreddits as relevant or not based on a yes/no criterion.
 
 ---
 
