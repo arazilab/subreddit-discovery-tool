@@ -10,6 +10,7 @@ def run_relevancy_coding(
     subs: Dict[str, Dict[str, Any]],
     question: str,
     method: str = "majority",
+    model: str = "gpt-4.1-nano",
     **kwargs
 ) -> Dict[str, Dict[str, Any]]:
     """
@@ -18,6 +19,7 @@ def run_relevancy_coding(
     :param subs: Dict mapping subreddit name to its data.
     :param question: Yes/No question for relevancy.
     :param method: 'majority' or 'confidence'.
+    :param model: OpenAI model name to use
     :param kwargs: Parameters for BooleanConsensusAgent.
     :return: Updated subs dict with 'relevant' field.
     """
@@ -37,10 +39,11 @@ def run_relevancy_coding(
         # Initialize the consensus agent
         if method == "majority":
             n_votes = kwargs.get("n_votes", 5)
-            agent = BooleanConsensusAgent(question=question, n_votes=n_votes)
+            agent = BooleanConsensusAgent(question=question, n_votes=n_votes, model=model)
         else:
             agent = BooleanConsensusAgent(
                 question=question,
+                model=model,
                 target_confidence=kwargs.get("target_confidence"),
                 min_votes=kwargs.get("min_votes", 5),
                 max_votes=kwargs.get("max_votes", 11)
