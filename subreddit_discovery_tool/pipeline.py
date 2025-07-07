@@ -34,16 +34,29 @@ class SubredditFinder:
         """
         Execute the full pipeline and save results.
         """
+        start_time = time.time()
+        print(f"[+] Starting subreddit discovery for keywords: {self.keywords}")
+
         # Step 1: Get subreddits
+        print("[*] Collecting subreddits...")
         subs = collect_subreddits(self.keywords, self.top_n)
+        print(f"[✓] Collected {len(subs)} unique subreddits.")
 
         # Step 2: Get top posts
+        print("[*] Collecting top posts for each subreddit...")
         posts_map = collect_top_posts(subs, self.top_k)
         for name, data in subs.items():
             data["top_posts"] = posts_map.get(name, [])
+        print(f"[✓] Top posts added.")
 
         # Step 3: Relevancy coding
+        print("[*] Running relevancy coding using OpenAI agent...")
         updated = run_relevancy_coding(subs, self.question, self.method, **self.method_kwargs)
+        print("[✓] Relevancy coding complete.")
 
         # Step 4: Save to JSON
+        print(f"[*] Saving results to {self.output_path} ...")
         save_json(list(updated.values()), self.output_path)
+        print(f"[✓] Output saved.")
+
+        print(f"[✓] All done in {round(time.time() - start_time, 2)} seconds.")
