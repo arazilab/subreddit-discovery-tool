@@ -21,6 +21,7 @@ class ArcticShiftClient:
         """
         url = f"{self.BASE_URL}/subreddits/search"
         params = {"subreddit_prefix": keyword, "limit": limit}
+        print(f"[~] Querying: {url} with params: {params}")  # Debug line
 
         try:
             resp = requests.get(url, params=params)
