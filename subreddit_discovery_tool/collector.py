@@ -3,6 +3,7 @@ Collects subreddit and post data using the API client.
 """
 from typing import List, Dict
 from .client import ArcticShiftClient
+import urllib.parse
 
 
 def collect_subreddits(keywords: List[str], top_n: int) -> Dict[str, Dict]:
@@ -16,7 +17,8 @@ def collect_subreddits(keywords: List[str], top_n: int) -> Dict[str, Dict]:
     client = ArcticShiftClient()
     subs: Dict[str, Dict] = {}
     for kw in keywords:
-        results = client.search_subreddits(kw, top_n)
+        encoded_kw = urllib.parse.quote(kw)
+        results = client.search_subreddits(encoded_kw, top_n)
         if not results:
             print(f"[!] No subreddits found or API failed for: {kw}")
             continue
