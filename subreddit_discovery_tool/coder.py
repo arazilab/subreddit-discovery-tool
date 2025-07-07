@@ -24,7 +24,6 @@ def run_relevancy_coding(
     question = f"Using subreddit title, description and top posts, answer: {question}"
     pbar = tqdm(subs.items())
     for name, data in pbar:
-        pbar.set_description("Relevance classification")
         # Build the prompt text
         title = data.get("display_name", name)
         desc = data.get("description", "No description provided")
