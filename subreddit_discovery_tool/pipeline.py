@@ -21,6 +21,7 @@ class SubredditFinder:
         sort_by: str = "score",
         method: str = "majority",
         method_kwargs: Dict[str, Any] = None,
+        model: str = "gpt-4.1-nano",
         output_path: str = "output.json"
     ):
         self.keywords = keywords
@@ -29,6 +30,7 @@ class SubredditFinder:
         self.top_k = top_k
         self.method = method
         self.method_kwargs = method_kwargs or {}
+        self.model = model
         self.output_path = output_path
 
     def run(self) -> None:
@@ -52,7 +54,7 @@ class SubredditFinder:
 
         # Step 3: Relevancy coding
         print("[*] Running relevancy coding using OpenAI agent...")
-        updated = run_relevancy_coding(subs, self.question, self.method, **self.method_kwargs)
+        updated = run_relevancy_coding(subs, self.question, self.method, self.model, **self.method_kwargs)
         print("[✓] Relevancy coding complete.")
 
         # Step 4: Save to JSON
