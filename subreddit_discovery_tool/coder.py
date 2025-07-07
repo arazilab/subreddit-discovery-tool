@@ -21,12 +21,13 @@ def run_relevancy_coding(
     :param kwargs: Parameters for BooleanConsensusAgent.
     :return: Updated subs dict with 'relevant' field.
     """
+    question = f"Using subreddit title, description and top posts, answer: {question}"
     for name, data in tqdm(subs.items(), desc="Relevance classification"):
         # Build the prompt text
         title = data.get("display_name", name)
-        desc = data.get("description", "")
+        desc = data.get("description", "No description provided")
         posts = data.get("top_posts", [])
-        content_parts = [title, desc]
+        content_parts = ["subreddit title:", title, "subreddit description:", desc]
         for p in posts:
             content_parts.append(p.get("title", ""))
             content_parts.append(p.get("selftext", ""))
