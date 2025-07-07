@@ -45,9 +45,7 @@ def run_relevancy_coding(
                 max_votes=kwargs.get("max_votes", 11)
             )
         # Run and store result
-        print(question)
-        print(text)
-        #result = agent(text)
+        result = agent(text)
         result = False
         data["relevant"] = bool(result)
     return subs
