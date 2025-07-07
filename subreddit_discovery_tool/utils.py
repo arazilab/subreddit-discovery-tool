@@ -12,6 +12,7 @@ def save_json(data: Any, path: str) -> None:
     :param data: Data to serialize (e.g., list or dict).
     :param path: File path to save JSON.
     """
+    print(f"[+] Writing output to {path} ...")
     with open(path, "w", encoding="utf-8") as f:
         json.dump(data, f, ensure_ascii=False, indent=2)
 
