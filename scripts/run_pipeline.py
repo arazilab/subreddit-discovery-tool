@@ -7,7 +7,7 @@ import sys
 sys.path.append('./openai_bot_utils')
 sys.path.append('./relevancy_coding_tool')
 
-from finder.pipeline import SubredditFinder
+from subreddit_discovery_tool.pipeline import SubredditFinder
 
 
 def main():
