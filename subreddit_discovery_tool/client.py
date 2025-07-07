@@ -28,8 +28,10 @@ class ArcticShiftClient:
             data = resp.json()
             return data["data"] if isinstance(data, dict) and "data" in data else data
         except requests.exceptions.HTTPError as e:
+            # Print the exact URL that failed for debugging
+            full_url = resp.url
             print(f"[!] Failed to fetch subreddits for keyword: '{keyword}'")
-            print(f"    URL: {resp.url}")
+            print(f"    URL: {full_url}")
             print(f"    Status Code: {resp.status_code}")
             print(f"    Message: {resp.text}")
             return []  # Fail silently with an empty list
