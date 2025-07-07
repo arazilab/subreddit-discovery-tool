@@ -22,7 +22,9 @@ def run_relevancy_coding(
     :return: Updated subs dict with 'relevant' field.
     """
     question = f"Using subreddit title, description and top posts, answer: {question}"
-    for name, data in tqdm(subs.items(), desc="Relevance classification"):
+    pbar = tqdm(subs.items())
+    for name, data in pbar:
+        pbar.set_description("Relevance classification")
         # Build the prompt text
         title = data.get("display_name", name)
         desc = data.get("description", "No description provided")
@@ -46,6 +48,6 @@ def run_relevancy_coding(
             )
         # Run and store result
         result = agent(text)
-        result = False
         data["relevant"] = bool(result)
+        pbar.set_description(f"{name}: {bool(result)}")
     return subs
