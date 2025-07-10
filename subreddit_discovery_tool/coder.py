@@ -28,7 +28,12 @@ def run_relevancy_coding(
     for name, data in pbar:
         # Build the prompt text
         title = data.get("display_name", name)
-        desc = data.get("description", "No description provided")
+        if data.get("public_description", "") != "":
+            desc = data.get("public_description", "No description provided")
+        elif data.get("description", "") != "":
+            desc = data.get("description", "No description provided")
+        else
+            desc = "No description provided"
         posts = data.get("top_posts", [])
         content_parts = ["subreddit title:", title, "subreddit description:", desc]
         for p in posts:
