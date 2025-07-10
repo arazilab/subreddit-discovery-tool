@@ -32,7 +32,7 @@ def run_relevancy_coding(
             desc = data.get("public_description", "No description provided")
         elif data.get("description", "") != "":
             desc = data.get("description", "No description provided")
-        else
+        else:
             desc = "No description provided"
         posts = data.get("top_posts", [])
         content_parts = ["subreddit title:", title, "subreddit description:", desc]
