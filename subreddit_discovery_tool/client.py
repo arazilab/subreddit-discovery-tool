@@ -1,8 +1,7 @@
-"""
-Client for Arctic Shift API interactions.
-"""
-import requests
+"""Client for Arctic Shift API interactions."""
 from typing import List, Dict, Any
+
+import requests
 
 
 class ArcticShiftClient:
@@ -10,6 +9,7 @@ class ArcticShiftClient:
     Wrapper around Arctic Shift API endpoints.
     """
     BASE_URL = "https://arctic-shift.photon-reddit.com/api"
+    TIMEOUT_SECONDS = 30
 
     def search_subreddits(self, keyword: str, limit: int) -> List[Dict[str, Any]]:
         """
@@ -23,18 +23,19 @@ class ArcticShiftClient:
         params = {"subreddit_prefix": keyword, "limit": limit}
 
         try:
-            resp = requests.get(url, params=params)
+            resp = requests.get(url, params=params, timeout=self.TIMEOUT_SECONDS)
             resp.raise_for_status()
             data = resp.json()
             return data["data"] if isinstance(data, dict) and "data" in data else data
-        except requests.exceptions.HTTPError as e:
-            # Print the exact URL that failed for debugging
-            full_url = resp.url
+        except requests.exceptions.RequestException as exc:
+            full_url = getattr(exc.response, "url", url)
+            status_code = getattr(exc.response, "status_code", "unknown")
+            message = getattr(exc.response, "text", str(exc))
             print(f"[!] Failed to fetch subreddits for keyword: '{keyword}'")
             print(f"    URL: {full_url}")
-            print(f"    Status Code: {resp.status_code}")
-            print(f"    Message: {resp.text}")
-            return []  # Fail silently with an empty list
+            print(f"    Status Code: {status_code}")
+            print(f"    Message: {message}")
+            return []
 
     def get_top_posts(self, subreddit: str, limit: int) -> List[Dict[str, Any]]:
         """
@@ -49,6 +50,16 @@ class ArcticShiftClient:
             "subreddit": subreddit,
             "limit": limit
         }
-        resp = requests.get(url, params=params)
-        resp.raise_for_status()
-        return resp.json()["data"]  # Arctic Shift returns a 'data' key
+        try:
+            resp = requests.get(url, params=params, timeout=self.TIMEOUT_SECONDS)
+            resp.raise_for_status()
+            return resp.json().get("data", [])
+        except requests.exceptions.RequestException as exc:
+            full_url = getattr(exc.response, "url", url)
+            status_code = getattr(exc.response, "status_code", "unknown")
+            message = getattr(exc.response, "text", str(exc))
+            print(f"[!] Failed to fetch posts for subreddit: '{subreddit}'")
+            print(f"    URL: {full_url}")
+            print(f"    Status Code: {status_code}")
+            print(f"    Message: {message}")
+            return []

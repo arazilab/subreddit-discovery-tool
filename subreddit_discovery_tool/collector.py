@@ -1,7 +1,6 @@
-"""
-Collects subreddit and post data using the API client.
-"""
-from typing import List, Dict
+"""Collect subreddit and post data using the API client."""
+from typing import Dict, List
+
 from .client import ArcticShiftClient
 from tqdm import tqdm
 
@@ -17,7 +16,9 @@ def collect_subreddits(keywords: List[str], top_n: int) -> Dict[str, Dict]:
     client = ArcticShiftClient()
     subs: Dict[str, Dict] = {}
     kws = set(kw_part for kw in keywords for kw_part in kw.split())
-    for kw in tqdm(list(kws), desc="Searching keywords"):
+    pbar = tqdm(list(kws), desc="Searching keywords")
+    for kw in pbar:
+        pbar.set_description(f"Searching keyword {kw}")
         results = client.search_subreddits(kw, top_n)
         if not results:
             print(f"[!] No subreddits found or API failed for: {kw}")
@@ -40,7 +41,9 @@ def collect_top_posts(subs: Dict[str, Dict], top_k: int) -> Dict[str, List[Dict]
     """
     client = ArcticShiftClient()
     posts_map: Dict[str, List[Dict]] = {}
-    for name in tqdm(subs, desc="Fetching posts per subreddit"):
+    pbar = tqdm(subs, desc="Fetching posts per subreddit")
+    for name in pbar:
+        pbar.set_description(f"Fetching posts for {name}")
         results = client.get_top_posts(name, top_k)
         posts_map[name] = results
     return posts_map

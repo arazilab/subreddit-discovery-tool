@@ -1,10 +1,13 @@
-"""
-High-level pipeline orchestrator for Subreddit Finder.
-"""
-from typing import List, Dict, Any
+"""High-level pipeline orchestrator for Subreddit Finder."""
 import time
+from typing import Any, Dict, List
+
 from .collector import collect_subreddits, collect_top_posts
-from .coder import run_relevancy_coding
+from .coder import (
+    DEFAULT_REASONING_EFFORT,
+    DEFAULT_RELEVANCY_MODEL,
+    run_relevancy_coding,
+)
 from .utils import save_json
 
 
@@ -21,7 +24,8 @@ class SubredditFinder:
         sort_by: str = "score",
         method: str = "majority",
         method_kwargs: Dict[str, Any] = None,
-        model: str = "gpt-4.1-nano",
+        model: str = DEFAULT_RELEVANCY_MODEL,
+        reasoning_effort: str = DEFAULT_REASONING_EFFORT,
         output_path: str = "output.json"
     ):
         self.keywords = keywords
@@ -31,6 +35,7 @@ class SubredditFinder:
         self.method = method
         self.method_kwargs = method_kwargs or {}
         self.model = model
+        self.reasoning_effort = reasoning_effort
         self.output_path = output_path
 
     def run(self) -> None:
@@ -53,8 +58,18 @@ class SubredditFinder:
         print(f"[✓] Top posts added.")
 
         # Step 3: Relevancy coding
-        print("[*] Running relevancy coding using OpenAI agent...")
-        updated = run_relevancy_coding(subs, self.question, self.method, self.model, **self.method_kwargs)
+        print(
+            "[*] Running relevancy coding with "
+            f"{self.model}, effort={self.reasoning_effort}..."
+        )
+        updated = run_relevancy_coding(
+            subs=subs,
+            question=self.question,
+            method=self.method,
+            model=self.model,
+            reasoning_effort=self.reasoning_effort,
+            **self.method_kwargs
+        )
         print("[✓] Relevancy coding complete.")
 
         # Step 4: Save to JSON
