@@ -1,6 +1,6 @@
 """High-level pipeline orchestrator for Subreddit Finder."""
 import time
-from typing import Any, Dict, List
+from typing import List
 
 from .collector import collect_subreddits, collect_top_posts
 from .coder import (
@@ -21,9 +21,6 @@ class SubredditFinder:
         question: str,
         top_n: int = 10,
         top_k: int = 5,
-        sort_by: str = "score",
-        method: str = "majority",
-        method_kwargs: Dict[str, Any] = None,
         model: str = DEFAULT_RELEVANCY_MODEL,
         reasoning_effort: str = DEFAULT_REASONING_EFFORT,
         output_path: str = "output.json"
@@ -32,8 +29,6 @@ class SubredditFinder:
         self.question = question
         self.top_n = top_n
         self.top_k = top_k
-        self.method = method
-        self.method_kwargs = method_kwargs or {}
         self.model = model
         self.reasoning_effort = reasoning_effort
         self.output_path = output_path
@@ -65,10 +60,8 @@ class SubredditFinder:
         updated = run_relevancy_coding(
             subs=subs,
             question=self.question,
-            method=self.method,
             model=self.model,
             reasoning_effort=self.reasoning_effort,
-            **self.method_kwargs
         )
         print("[✓] Relevancy coding complete.")
 

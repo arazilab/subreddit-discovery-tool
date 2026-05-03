@@ -4,11 +4,12 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "subreddit-discovery-tool"
-version = "0.2.0"
+version = "0.3.0"
 description = "Discover Reddit communities and code their relevance with GPT models."
 readme = "README.md"
 requires-python = ">=3.9"
 dependencies = [
+    "openai>=1.99",
     "requests>=2.31",
     "tqdm>=4.66",
 ]
